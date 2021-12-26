@@ -1,0 +1,37 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.31515.178
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "00. Documentations", "00. Documentations", "{489BF926-AFDA-43A4-9969-C1CAD557A922}"
+	ProjectSection(SolutionItems) = preProject
+		.gitignore = .gitignore
+		LICENSE = LICENSE
+		Readme.md = Readme.md
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "01. Source Codes", "01. Source Codes", "{B906B971-D977-4702-AA58-9D7420EBB24D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ahri", "src\Ahri\Ahri.csproj", "{CC19B0D6-8776-4527-934F-1A3B420FA04A}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{CC19B0D6-8776-4527-934F-1A3B420FA04A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CC19B0D6-8776-4527-934F-1A3B420FA04A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CC19B0D6-8776-4527-934F-1A3B420FA04A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CC19B0D6-8776-4527-934F-1A3B420FA04A}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{CC19B0D6-8776-4527-934F-1A3B420FA04A} = {B906B971-D977-4702-AA58-9D7420EBB24D}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {3DA3874F-0347-4709-B1AB-29D6FD160DA6}
+	EndGlobalSection
+EndGlobal
