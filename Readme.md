@@ -127,9 +127,21 @@ class Program {
                 Registry.AddSingletonForm<MyForm>();
             })
             .Configure(Services => {
-                // TODO: Configure service instances here.
-                var Form = Services.GetRequiredService<MyForm>();
-                Form.Invoke(Form.Show);
+                var Pump = Services.GetRequiredService<IWinFormMessagePump>();
+                _ = Pump.InvokeAsync(() =>
+                {
+                    var Form = Services.GetRequiredService<MyForm>();
+
+                    /* TODO: Write logic to mediate forms. */
+                    Form.FormClosed += (_, _) =>
+                    {
+                        Services
+                            .GetRequiredService<IHostLifetime>()
+                            .Terminate();
+                    };
+
+                    Form.Show();
+                });
             })
             .Build()
             .RunAsync();
