@@ -1,5 +1,6 @@
 ## Ahri
 _The Simplest Dependency Injection Framework_
+
 _Use DI on Everywhere!_
 
 Ahri is the alternative implementation that is compatible 
@@ -10,6 +11,9 @@ The users can make an application with minimal effort that is modular based on d
 2. Increase reusability.
 3. Easier test driven development
 4. High readability
+
+### Installation
+See https://www.nuget.org/packages/Ahri here.
 
 ### Basic usage.
 ```
@@ -81,6 +85,30 @@ var RetVal = Injector.Invoke(Method, Injector);
 
 ```
 
+### Hosting feature. (Ahri.Hosting package)
+```
+using System;
+using System.Threading.Tasks;
+using Ahri
+using Ahri.Core;
+using Ahri.Hosting;
+using Ahri.Hosting.Builders;
+
+class Program {
+    static async Task Main(string[] args) {
+        await new HostBuilder()
+            .ConfigureServices(Registry => {
+                // TODO: Register services here.
+            })
+            .Configure(Services => {
+                // TODO: Configure service instances here.
+            })
+            .Build()
+            .RunAsync();
+    }
+}
+```
+
 ### Developing features:
-1. A simple application builder. (e.g. HostBuilder of the ASP.NET Core)
+1. Dockerization.
 2. Etc...........
