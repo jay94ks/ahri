@@ -16,11 +16,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ahri", "src\Ahri\Ahri.cspro
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ahri.Hosting", "src\Ahri.Hosting\Ahri.Hosting.csproj", "{EBA72460-F7DE-4EFE-8EDB-CDDDF3FC2D4E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ahri.Hosting.Winform", "src\Ahri.Hosting.Winform\Ahri.Hosting.Winform.csproj", "{DE8328BA-A849-4C57-B246-926E1A2628EF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ahri.Hosting.Winform", "src\Ahri.Hosting.Winform\Ahri.Hosting.Winform.csproj", "{DE8328BA-A849-4C57-B246-926E1A2628EF}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "99. Examples", "99. Examples", "{E1E01259-D0B8-4BAC-90F9-9FDAD4E845BC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ahri.Examples.Hosting.WinForm", "examples\Ahri.Examples.Hosting.WinForm\Ahri.Examples.Hosting.WinForm.csproj", "{6D2CC63E-FCA1-455F-8F8F-6BCB7FE34F2C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ahri.Examples.Hosting.WinForm", "examples\Ahri.Examples.Hosting.WinForm\Ahri.Examples.Hosting.WinForm.csproj", "{6D2CC63E-FCA1-455F-8F8F-6BCB7FE34F2C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ahri.Hosting.Windows", "src\Ahri.Hosting.Windows\Ahri.Hosting.Windows.csproj", "{5F13EA4F-3ABA-42DF-B9F5-F891AF2B7DE6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -44,6 +46,10 @@ Global
 		{6D2CC63E-FCA1-455F-8F8F-6BCB7FE34F2C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6D2CC63E-FCA1-455F-8F8F-6BCB7FE34F2C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6D2CC63E-FCA1-455F-8F8F-6BCB7FE34F2C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5F13EA4F-3ABA-42DF-B9F5-F891AF2B7DE6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5F13EA4F-3ABA-42DF-B9F5-F891AF2B7DE6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5F13EA4F-3ABA-42DF-B9F5-F891AF2B7DE6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5F13EA4F-3ABA-42DF-B9F5-F891AF2B7DE6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -53,6 +59,7 @@ Global
 		{EBA72460-F7DE-4EFE-8EDB-CDDDF3FC2D4E} = {B906B971-D977-4702-AA58-9D7420EBB24D}
 		{DE8328BA-A849-4C57-B246-926E1A2628EF} = {B906B971-D977-4702-AA58-9D7420EBB24D}
 		{6D2CC63E-FCA1-455F-8F8F-6BCB7FE34F2C} = {E1E01259-D0B8-4BAC-90F9-9FDAD4E845BC}
+		{5F13EA4F-3ABA-42DF-B9F5-F891AF2B7DE6} = {B906B971-D977-4702-AA58-9D7420EBB24D}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {3DA3874F-0347-4709-B1AB-29D6FD160DA6}

@@ -109,6 +109,28 @@ class Program {
 }
 ```
 
+### Windows Service Hosting feature. (Ahri.Hosting.Windows package)
+```
+using Ahri.Hosting;
+using Ahri.Hosting.Builders;
+using Ahri.Hosting.Windows;
+
+class Program {
+    static async Task Main(string[] args) {
+        await new HostBuilder()
+            .EnableWindowsService()
+            .ConfigureServices(Registry => {
+                // TODO: Register services here.
+            })
+            .Configure(Services => {
+                // TODO: Configure service instances here.
+            })
+            .Build()
+            .RunAsync();
+    }
+}
+```
+
 ### WinForm Hosting feature. (Ahri.Hosting.WinForm package)
 ```
 using Ahri.Hosting;
