@@ -109,6 +109,40 @@ class Program {
 }
 ```
 
+### WinForm Hosting feature. (Ahri.Hosting.WinForm package)
+```
+using System;
+using System.Threading.Tasks;
+using Ahri;
+using Ahri.Core;
+using Ahri.Hosting;
+using Ahri.Hosting.Builders;
+using Ahri.Hosting.Winform;
+
+class Program {
+    static async Task Main(string[] args) {
+        await new HostBuilder()
+            .ConfigureServices(Registry => {
+                // TODO: Register services here.
+                Registry.AddSingletonForm<MyForm>();
+            })
+            .Configure(Services => {
+                // TODO: Configure service instances here.
+                var Form = Services.GetRequiredService<MyForm>();
+                Form.Invoke(Form.Show);
+            })
+            .Build()
+            .RunAsync();
+    }
+
+    class MyForm : Form {
+        // ........................
+    }
+}
+
+```
+
+
 ### Developing features:
 1. Dockerization.
 2. Etc...........

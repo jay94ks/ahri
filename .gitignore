@@ -1,3 +1,6 @@
 .vs
 src/*/bin
 src/*/obj
+
+examples/*/bin
+examples/*/obj
