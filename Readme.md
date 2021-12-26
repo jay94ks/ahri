@@ -111,13 +111,11 @@ class Program {
 
 ### WinForm Hosting feature. (Ahri.Hosting.WinForm package)
 ```
-using System;
-using System.Threading.Tasks;
-using Ahri;
-using Ahri.Core;
 using Ahri.Hosting;
 using Ahri.Hosting.Builders;
 using Ahri.Hosting.Winform;
+using System.Threading.Tasks;
+using System.Windows.Forms;
 
 class Program {
     static async Task Main(string[] args) {

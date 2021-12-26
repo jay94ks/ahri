@@ -1,13 +1,8 @@
-﻿using System;
-using System.Threading;
-using System.Threading.Tasks;
-using System.Windows.Forms;
-using Ahri;
-using Ahri.Core;
-using Ahri.Hosting;
+﻿using Ahri.Hosting;
 using Ahri.Hosting.Builders;
 using Ahri.Hosting.Winform;
-
+using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace Ahri.Examples.Hosting.WinForm
 {
