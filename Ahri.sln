@@ -24,6 +24,14 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ahri.Examples.Hosting.WinFo
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ahri.Hosting.Windows", "src\Ahri.Hosting.Windows\Ahri.Hosting.Windows.csproj", "{5F13EA4F-3ABA-42DF-B9F5-F891AF2B7DE6}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "02. Messaging Extensions", "02. Messaging Extensions", "{CE65E5FA-BA8A-4719-A118-84FAC5A4E2E6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ahri.Examples.Messanger.Server", "examples\Ahri.Examples.Messanger.Server\Ahri.Examples.Messanger.Server.csproj", "{94EAC554-06C2-465B-947E-8779C6D44BE1}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ahri.Networks", "src\Ahri.Networks\Ahri.Networks.csproj", "{B44BDED1-E8A9-4DF1-B619-DD80E3AE8E97}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ahri.Networks.Hosting", "src\Ahri.Networks.Hosting\Ahri.Networks.Hosting.csproj", "{5108345D-E462-46B4-9A12-CA13AFD4646C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -50,6 +58,18 @@ Global
 		{5F13EA4F-3ABA-42DF-B9F5-F891AF2B7DE6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5F13EA4F-3ABA-42DF-B9F5-F891AF2B7DE6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5F13EA4F-3ABA-42DF-B9F5-F891AF2B7DE6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{94EAC554-06C2-465B-947E-8779C6D44BE1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{94EAC554-06C2-465B-947E-8779C6D44BE1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{94EAC554-06C2-465B-947E-8779C6D44BE1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{94EAC554-06C2-465B-947E-8779C6D44BE1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B44BDED1-E8A9-4DF1-B619-DD80E3AE8E97}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B44BDED1-E8A9-4DF1-B619-DD80E3AE8E97}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B44BDED1-E8A9-4DF1-B619-DD80E3AE8E97}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B44BDED1-E8A9-4DF1-B619-DD80E3AE8E97}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5108345D-E462-46B4-9A12-CA13AFD4646C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5108345D-E462-46B4-9A12-CA13AFD4646C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5108345D-E462-46B4-9A12-CA13AFD4646C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5108345D-E462-46B4-9A12-CA13AFD4646C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -60,6 +80,9 @@ Global
 		{DE8328BA-A849-4C57-B246-926E1A2628EF} = {B906B971-D977-4702-AA58-9D7420EBB24D}
 		{6D2CC63E-FCA1-455F-8F8F-6BCB7FE34F2C} = {E1E01259-D0B8-4BAC-90F9-9FDAD4E845BC}
 		{5F13EA4F-3ABA-42DF-B9F5-F891AF2B7DE6} = {B906B971-D977-4702-AA58-9D7420EBB24D}
+		{94EAC554-06C2-465B-947E-8779C6D44BE1} = {E1E01259-D0B8-4BAC-90F9-9FDAD4E845BC}
+		{B44BDED1-E8A9-4DF1-B619-DD80E3AE8E97} = {B906B971-D977-4702-AA58-9D7420EBB24D}
+		{5108345D-E462-46B4-9A12-CA13AFD4646C} = {B906B971-D977-4702-AA58-9D7420EBB24D}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {3DA3874F-0347-4709-B1AB-29D6FD160DA6}

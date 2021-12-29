@@ -15,6 +15,8 @@ The users can make an application with minimal effort that is modular based on d
 ### Installation
 See https://www.nuget.org/packages/Ahri here.
 
+### Extensions.
+
 ### Basic usage.
 ```
 using System;

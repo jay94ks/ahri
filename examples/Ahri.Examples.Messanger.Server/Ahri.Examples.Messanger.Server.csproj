@@ -1,0 +1,14 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net5.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\Ahri.Networks\Ahri.Networks.csproj" />
+    <ProjectReference Include="..\..\src\Ahri.Services.Networks\Ahri.Networks.csproj" />
+    <ProjectReference Include="..\..\src\Ahri\Ahri.csproj" />
+  </ItemGroup>
+
+</Project>

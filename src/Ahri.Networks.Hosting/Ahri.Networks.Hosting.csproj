@@ -1,0 +1,16 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Folder Include="Internals\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Ahri.Networks\Ahri.Networks.csproj" />
+    <ProjectReference Include="..\Ahri\Ahri.csproj" />
+  </ItemGroup>
+
+</Project>
