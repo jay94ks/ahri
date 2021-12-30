@@ -12,7 +12,6 @@ namespace Ahri.Networks.Tcp
 {
     public class TcpServer<TSession> where TSession : TcpSession
     {
-        private IServiceProvider m_Services;
         private TaskCompletionSource<bool> m_Startup;
 
         private IPEndPoint m_EndPoint;
@@ -48,8 +47,13 @@ namespace Ahri.Networks.Tcp
         public TcpServer(IServiceProvider Services, IPEndPoint EndPoint)
         {
             m_EndPoint = EndPoint;
-            m_Services = Services ?? Shared.Null;
+            this.Services = Services ?? Shared.Null;
         }
+
+        /// <summary>
+        /// Service Provider instance.
+        /// </summary>
+        protected IServiceProvider Services { get; }
 
         /// <summary>
         /// Start the server asynchronously.
@@ -144,13 +148,14 @@ namespace Ahri.Networks.Tcp
                         break;
                     }
 
-                    var Scope = m_Services.GetRequiredService<IServiceScopeFactory>().CreateScope();
+                    var Scope = Services.GetRequiredService<IServiceScopeFactory>().CreateScope();
                     var Injector = Scope.ServiceProvider.GetRequiredService<IServiceInjector>();
 
                     var Sess = (TSession)Injector.Create(typeof(TSession));
+                    await OnConfigure(Sess);
+
                     if (Sess.Activate(Tcp, Scope, true, Cts.Token))
                     {
-                        await OnConfigure(Sess);
                         await Sess.ExecuteLoopAsync();
                         Sess.EnableDisposeOnLoopEnd();
                     }

@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
@@ -6,9 +6,8 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\src\Ahri.Hosting\Ahri.Hosting.csproj" />
     <ProjectReference Include="..\..\src\Ahri.Networks.Http\Ahri.Http.csproj" />
-    <ProjectReference Include="..\..\src\Ahri.Networks\Ahri.Networks.csproj" />
-    <ProjectReference Include="..\..\src\Ahri\Ahri.csproj" />
   </ItemGroup>
 
 </Project>

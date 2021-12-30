@@ -59,6 +59,11 @@ namespace Ahri.Networks.Tcp
             return true;
         }
 
+        /// <summary>
+        /// Service Provider that is valid until the session is alive.
+        /// </summary>
+        protected IServiceProvider Services => m_Scope != null ? m_Scope.ServiceProvider : Shared.Null;
+
         internal Task<bool> ExecuteLoopAsync()
         {
             m_Loop = RunLoop();
@@ -256,7 +261,6 @@ namespace Ahri.Networks.Tcp
             m_Cts.Dispose();
 
             m_Scope?.Dispose();
-            m_Scope = null;
         }
 
         /// <summary>

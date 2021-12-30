@@ -134,12 +134,10 @@ namespace Ahri.Networks.Tcp
 
                 var Scope = m_Services.GetRequiredService<IServiceScopeFactory>().CreateScope();
                 var Injector = Scope.ServiceProvider.GetRequiredService<IServiceInjector>();
+                await OnConfigure(m_Session = (TSession)Injector.Create(typeof(TSession)));
 
-                m_Session = (TSession)Injector.Create(typeof(TSession));
                 if (m_Session.Activate(Tcp, Scope, false, default))
                 {
-                    await OnConfigure(m_Session);
-
                     await m_Session.ExecuteLoopAsync();
                     m_Session.EnableDisposeOnLoopEnd();
                 }

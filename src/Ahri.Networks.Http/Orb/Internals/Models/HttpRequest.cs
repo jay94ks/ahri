@@ -4,9 +4,9 @@ using System.IO;
 using System.Net;
 using System.Threading;
 
-namespace Ahri.Networks.Http
+namespace Ahri.Http.Orb.Internals.Models
 {
-    public class HttpRequest
+    public class HttpRequest : IHttpRequest
     {
         /// <summary>
         /// Hides the constructor of the <see cref="HttpRequest"/> instance.

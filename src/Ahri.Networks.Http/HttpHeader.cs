@@ -1,4 +1,4 @@
-﻿namespace Ahri.Networks.Http
+﻿namespace Ahri.Http
 {
     public struct HttpHeader
     {

@@ -1,19 +1,19 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 
-namespace Ahri.Networks.Http
+namespace Ahri.Http.Orb.Internals.Models
 {
-    public class HttpResponse
+    public class HttpResponse : IHttpResponse
     {
         /// <summary>
         /// Status.
         /// </summary>
-        public int Status { get; set; } = 200;
+        public int Status { get; set; } = 404;
 
         /// <summary>
         /// Status Phrase.
         /// </summary>
-        public string Phrase { get; set; } = "OK";
+        public string Phrase { get; set; }
 
         /// <summary>
         /// Response Headers to be sent.

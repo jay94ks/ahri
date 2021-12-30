@@ -1,4 +1,6 @@
-﻿using Ahri.Networks.Tcp;
+﻿using Ahri.Http.Orb.Internals.Models;
+using Ahri.Networks;
+using Ahri.Networks.Tcp;
 using Ahri.Networks.Utilities;
 using System;
 using System.Collections.Generic;
@@ -10,11 +12,11 @@ using System.Threading;
 using System.Threading.Channels;
 using System.Threading.Tasks;
 
-namespace Ahri.Networks.Http
+namespace Ahri.Http.Orb.Internals
 {
-    public abstract class HttpSession : TcpSession
+    public class HttpConnection : TcpSession
     {
-        private const byte CR = (byte) '\n';
+        private const byte CR = (byte)'\n';
 
         private int m_State = 0;
 
@@ -37,17 +39,34 @@ namespace Ahri.Networks.Http
 
         private HttpResponse m_Response;
 
+        /// <summary>
+        /// Server Instance.
+        /// </summary>
+        internal HttpServer Server { get; set; }
+
         /// <inheritdoc/>
         protected override Task OnCreateAsync() => Task.CompletedTask;
 
         /// <inheritdoc/>
         protected override Task OnDestroyAsync(SocketError Error)
         {
+            m_Inputs?.TryComplete();
+
+            try { m_OutputStream?.Close(); }
+            catch { }
+
             m_RequestAborts?.Cancel();
             m_RequestAborts?.Dispose();
             m_RequestAborts = null;
 
             return Task.CompletedTask;
+        }
+
+        private async Task OnInternalReceiveAsync(IHttpRequest Request, IHttpResponse Response)
+        {
+            using var Scope = Services.GetRequiredService<IServiceScopeFactory>().CreateScope();
+            (Request as HttpRequest).Services = Scope.ServiceProvider;
+            await OnReceiveAsync(Request, Response);
         }
 
         /// <summary>
@@ -56,7 +75,8 @@ namespace Ahri.Networks.Http
         /// <param name="Request"></param>
         /// <param name="Response"></param>
         /// <returns></returns>
-        protected abstract Task OnReceiveAsync(HttpRequest Request, HttpResponse Response);
+        protected virtual Task OnReceiveAsync(IHttpRequest Request, IHttpResponse Response) 
+            => Server.InvokeOnRequestAsync(new HttpContext(Request, Response));
 
         /// <inheritdoc/>
         protected override async Task OnReceiveAsync(PacketFragment Fragment)
@@ -147,6 +167,10 @@ namespace Ahri.Networks.Http
             }
         }
 
+        /// <summary>
+        /// Execute the request.
+        /// </summary>
+        /// <returns></returns>
         private async Task<bool> ExecuteAsync()
         {
             HttpRequest Request;
@@ -171,7 +195,7 @@ namespace Ahri.Networks.Http
                 m_Response = Response;
                 m_TaskOutputs = null;
 
-                m_Task = OnReceiveAsync(Request, Response);
+                m_Task = OnInternalReceiveAsync(Request, Response);
                 m_State++;
                 return true;
             }
@@ -314,17 +338,26 @@ namespace Ahri.Networks.Http
                     () => m_Outputs.Completion.IsCompleted,
                     () => m_Outputs.ReadAsync());
 
-            if (!Unhandled || Response.Content == m_OutputStream)
-                SetChunkedEncoding(Response, Unhandled);
+            Response.Headers.RemoveAll(X =>
+            {
+                return X.Key.Equals("Transfer-Encoding", StringComparison.OrdinalIgnoreCase)
+                    || X.Key.Equals("Content-Length", StringComparison.OrdinalIgnoreCase);
+            });
 
+            if (Unhandled || Response.Content == m_OutputStream)
+            {
+                if (!Unhandled)
+                    SetChunkedEncoding(Response);
+
+                else
+                {
+                    Response.Headers.Add(new HttpHeader("Content-Length", "0"));
+                    Sender = () => Task.CompletedTask;
+                }
+            }
             else
             {
                 var Content = Response.Content;
-                Response.Headers.RemoveAll(X =>
-                {
-                    return X.Key.Equals("Transfer-Encoding", StringComparison.OrdinalIgnoreCase)
-                        || X.Key.Equals("Content-Length", StringComparison.OrdinalIgnoreCase);
-                });
 
                 var EndOfStream = false;
                 if (!Content.CanSeek)
@@ -335,7 +368,10 @@ namespace Ahri.Networks.Http
                         async () =>
                         {
                             var Buffer = new byte[4096];
-                            int Length = await Content.ReadAsync(Buffer);
+                            int Length;
+
+                            try { Length = await Content.ReadAsync(Buffer); }
+                            catch { Length = 0; }
 
                             if (Length != Buffer.Length)
                                 Array.Resize(ref Buffer, Length);
@@ -356,10 +392,10 @@ namespace Ahri.Networks.Http
 
                         while (true)
                         {
-                            int Length = 0;
+                            int Length;
 
                             try { Length = await Content.ReadAsync(Buffer); }
-                            catch { }
+                            catch { Length = 0; }
 
                             if (Length <= 0)
                                 break;
@@ -384,6 +420,12 @@ namespace Ahri.Networks.Http
         /// <returns></returns>
         private async Task SendHeadersAsync(HttpResponse Response)
         {
+            if (string.IsNullOrWhiteSpace(Response.Phrase))
+            {
+                HttpStatusCodes.Table.TryGetValue(Response.Status, out var Phrase);
+                Response.Phrase = (Phrase ?? "Unknown").Trim(' ', '\t');
+            }
+
             string Header = $"HTTP/1.1 {Response.Status} {Response.Phrase}\r\n" +
                             string.Join("\r\n", Response.Headers.Select(X => $"{X.Key}: {X.Value}")) +
                             "\r\n\r\n";
@@ -395,20 +437,13 @@ namespace Ahri.Networks.Http
         /// Set the response as chunked encoding.
         /// </summary>
         /// <param name="Response"></param>
-        private static void SetChunkedEncoding(HttpResponse Response, bool Unhandled)
+        private static void SetChunkedEncoding(HttpResponse Response)
         {
             Response.Headers.RemoveAll(X =>
             {
-                return X.Key.Equals("Transfer-Encoding", StringComparison.OrdinalIgnoreCase) 
-                    || X.Key.Equals("Content-Length", StringComparison.OrdinalIgnoreCase)
-                    || X.Key.Equals("Content-Encoding", StringComparison.OrdinalIgnoreCase);
+                return X.Key.Equals("Transfer-Encoding", StringComparison.OrdinalIgnoreCase)
+                    || X.Key.Equals("Content-Length", StringComparison.OrdinalIgnoreCase);
             });
-
-            if (Unhandled)
-            {
-                Response.Headers.Add(new HttpHeader("Content-Length", "0"));
-                return;
-            }
 
             Response.Headers.Add(new HttpHeader("Transfer-Encoding", "chunked"));
         }
@@ -419,7 +454,7 @@ namespace Ahri.Networks.Http
         /// <param name="Completion"></param>
         /// <param name="ReadAsync"></param>
         /// <returns></returns>
-        private async Task SendChunkedAsync(Func<bool> Completion, Func<ValueTask<byte[]>> ReadAsync)
+        private async Task SendChunkedAsync(Func<bool> Completion, Func<ValueTask<byte[]>> ReadAsync, bool Unhandled = false)
         {
             PacketFragment Current;
             while (!Completion())
