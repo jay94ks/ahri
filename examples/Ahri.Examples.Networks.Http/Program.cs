@@ -2,6 +2,7 @@
 using Ahri.Hosting.Builders;
 using Ahri.Http.Hosting;
 using Ahri.Http.Orb;
+using Ahri.Logging;
 using System.Net;
 using System.Threading.Tasks;
 
@@ -12,6 +13,7 @@ namespace Ahri.Examples.Networks.Http
         static async Task Main(string[] args)
         {
             await new HostBuilder()
+                .ConfigureLogging()
                 .ConfigureHttpHost(Http =>
                 {
                     Http.UseOrb() // --> Use `Orb` as Http Server.
@@ -30,7 +32,9 @@ namespace Ahri.Examples.Networks.Http
                             // TODO: Adds Middlewares here.
                             App.Use((Context, Next) =>
                             {
+                                var Logger = Context.Request.Services.GetService<ILogger<Program>>();
 
+                                Logger.Log(LogLevel.Info, Context.Request.PathString);
                                 return Next();
                             });
 

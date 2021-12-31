@@ -30,12 +30,15 @@ namespace Ahri.Http.Orb.Internals
             var Tcs = new TaskCompletionSource();
             using (StoppingToken.Register(Tcs.SetResult))
             {
+                m_Server.SetApplication(Application);
+
                 if (!await m_Server.StartAsync())
                 {
                     throw new InvalidOperationException(
                         "Couldn't start the HttpServer instance for " +
                         $"{m_EndPoint.Address}:{m_EndPoint.Port}.");
                 }
+
 
                 await Tcs.Task;
                 await m_Server.StopAsync();

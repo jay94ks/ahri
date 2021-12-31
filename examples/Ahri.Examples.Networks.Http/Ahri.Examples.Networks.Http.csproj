@@ -7,6 +7,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\Ahri.Hosting\Ahri.Hosting.csproj" />
+    <ProjectReference Include="..\..\src\Ahri.Logging\Ahri.Logging.csproj" />
     <ProjectReference Include="..\..\src\Ahri.Networks.Http\Ahri.Http.csproj" />
   </ItemGroup>
 

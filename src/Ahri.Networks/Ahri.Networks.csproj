@@ -2,10 +2,26 @@
 
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
+    <Description>The simplest dependency injection framework that is for writing an application, use DI on everywhere!</Description>
+    <Copyright>Copyright (C) 2021 Jaehoon Joe &lt;jay94ks@gmail.com&gt;</Copyright>
+    <PackageLicenseFile>LICENSE</PackageLicenseFile>
+    <PackageProjectUrl>https://github.com/jay94ks/ahri</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/jay94ks/ahri</RepositoryUrl>
+    <RepositoryType>github</RepositoryType>
+    <Company>Jaehoon Joe</Company>
+    <Authors>Jaehoon Joe</Authors>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
   </PropertyGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Ahri\Ahri.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\..\LICENSE">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
   </ItemGroup>
 
 </Project>
