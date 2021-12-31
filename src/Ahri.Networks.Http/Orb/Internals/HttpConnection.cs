@@ -377,7 +377,12 @@ namespace Ahri.Http.Orb.Internals
                                 Array.Resize(ref Buffer, Length);
 
                             if (Length <= 0)
+                            {
+                                try { Content.Close(); } catch { }
+                                try { Content.Dispose(); } catch { }
+
                                 EndOfStream = true;
+                            }
 
                             return Buffer;
                         });
@@ -403,8 +408,8 @@ namespace Ahri.Http.Orb.Internals
                             await SendAsync(new PacketFragment(Buffer, 0, Length));
                         }
 
-                        try { Content.Dispose(); }
-                        catch { }
+                        try { Content.Close(); } catch { }
+                        try { Content.Dispose(); } catch { }
                     };
                 }
             }
