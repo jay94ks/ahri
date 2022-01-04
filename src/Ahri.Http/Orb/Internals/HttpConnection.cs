@@ -1,12 +1,16 @@
-﻿using Ahri.Http.Orb.Internals.Models;
+﻿using Ahri.Core;
+using Ahri.Http.Orb.Internals.Models;
 using Ahri.Networks;
 using Ahri.Networks.Tcp;
 using Ahri.Networks.Utilities;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Net.Sockets;
+using System.Reflection;
 using System.Text;
 using System.Threading;
 using System.Threading.Channels;
@@ -65,6 +69,7 @@ namespace Ahri.Http.Orb.Internals
         private async Task OnInternalReceiveAsync(IHttpRequest Request, IHttpResponse Response)
         {
             using var Scope = Services.GetRequiredService<IServiceScopeFactory>().CreateScope();
+
             (Request as HttpRequest).Services = Scope.ServiceProvider;
             await OnReceiveAsync(Request, Response);
         }

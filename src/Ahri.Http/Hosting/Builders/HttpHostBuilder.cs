@@ -28,7 +28,8 @@ namespace Ahri.Http.Hosting.Builders
                     Services
                         .AddHostedService<HttpServerExecutor>()
                         .AddSingleton<HttpServerAccessor>()
-                        .AddSingleton<HttpApplicationAccessor>();
+                        .AddSingleton<HttpApplicationAccessor>()
+                        .AddScoped<HttpContextAccessor>();
                 })
 
                 .Configure(Services =>

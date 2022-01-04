@@ -30,6 +30,10 @@ namespace Ahri.Http.Hosting.Internals
             if (m_App is null)
                 return Task.CompletedTask;
 
+            var Accessor = Context.Request.Services.GetService<IHttpContextAccessor>();
+            if (Accessor is HttpContextAccessor Instance)
+                Instance.Instance = Context;
+
             return m_App(Context, () => Task.CompletedTask);
         }
     }

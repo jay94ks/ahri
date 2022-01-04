@@ -24,6 +24,13 @@ namespace Ahri.Http.Hosting
         IHttpApplicationBuilder Use(Func<IHttpContext, Func<Task>, Task> Middleware);
 
         /// <summary>
+        /// Adds a delegate that creates the middleware delegate.
+        /// </summary>
+        /// <param name="Factory"></param>
+        /// <returns></returns>
+        IHttpApplicationBuilder Use(Func<Func<IHttpContext, Func<Task>, Task>> Factory);
+
+        /// <summary>
         /// Adds a delegate that configure the services that related with middlewares.
         /// </summary>
         /// <param name="Configure"></param>

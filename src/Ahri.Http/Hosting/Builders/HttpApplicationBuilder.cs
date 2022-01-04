@@ -11,7 +11,7 @@ namespace Ahri.Http.Hosting.Builders
     public class HttpApplicationBuilder : IHttpApplicationBuilder
     {
         private List<Action<IServiceProvider>> m_Configures = new();
-        private List<Func<IHttpContext, Func<Task>, Task>> m_Middlewares = new();
+        private List<Func<Func<IHttpContext, Func<Task>, Task>>> m_Middlewares = new();
 
         /// <summary>
         /// Initialize a new <see cref="HttpApplicationBuilder"/> instances.
@@ -29,7 +29,14 @@ namespace Ahri.Http.Hosting.Builders
         /// <inheritdoc/>
         public IHttpApplicationBuilder Use(Func<IHttpContext, Func<Task>, Task> Middleware)
         {
-            m_Middlewares.Add(Middleware);
+            m_Middlewares.Add(() => Middleware);
+            return this;
+        }
+
+        /// <inheritdoc/>
+        public IHttpApplicationBuilder Use(Func<Func<IHttpContext, Func<Task>, Task>> Factory)
+        {
+            m_Middlewares.Add(Factory);
             return this;
         }
 
@@ -43,11 +50,12 @@ namespace Ahri.Http.Hosting.Builders
         /// <inheritdoc/>
         public IHttpApplication Build()
         {
-            var App = m_Middlewares.FirstOrDefault();
+            var Factory = m_Middlewares.FirstOrDefault();
+            var App = Factory != null ? Factory() : null;
             if (App != null)
             {
                 foreach(var Each in m_Middlewares.Skip(1))
-                    App = new HttpMiddleware(App, Each).InvokeAsync;
+                    App = new HttpMiddleware(App, Each()).InvokeAsync;
             }
 
             using(var Scope = ApplicationServices
