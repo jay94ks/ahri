@@ -6,6 +6,11 @@ namespace Ahri.Http.Orb.Internals.Models
     public class HttpResponse : IHttpResponse
     {
         /// <summary>
+        /// Initialize a new <see cref="HttpResponse"/> instance.
+        /// </summary>
+        public HttpResponse() => Headers.Set("Server", "Ahri Orb");
+
+        /// <summary>
         /// Status.
         /// </summary>
         public int Status { get; set; } = 404;

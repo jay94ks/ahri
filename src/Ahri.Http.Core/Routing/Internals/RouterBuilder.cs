@@ -9,7 +9,7 @@ namespace Ahri.Http.Core.Routing.Internals
 {
     public class RouterBuilder : IRouterBuilder
     {
-        private Dictionary<string, Func<IHttpContext, Task>> m_Methods = new();
+        private Dictionary<string, Func<IHttpContext, Task<IHttpAction>>> m_Methods = new();
         private List<(Func<IHttpContext, Task<bool>> Cond, IRouterBuilder Route)> m_Conditionals = new();
         private Dictionary<string, IRouterBuilder> m_PathRouters = new();
         private List<Func<IHttpContext, Func<Task>, Task>> m_Middlewares = new();
@@ -47,7 +47,7 @@ namespace Ahri.Http.Core.Routing.Internals
         public IDictionary<object, object> Properties { get; } = new Dictionary<object, object>();
 
         /// <inheritdoc/>
-        public IRouterBuilder Map(string Method, Func<IHttpContext, Task> Endpoint)
+        public IRouterBuilder Map(string Method, Func<IHttpContext, Task<IHttpAction>> Endpoint)
         {
             if (string.IsNullOrWhiteSpace(Method) || Method == "*")
             {
@@ -63,20 +63,24 @@ namespace Ahri.Http.Core.Routing.Internals
         public IRouterBuilder Path(string Path, Action<IRouterBuilder> Configure)
         {
             var Index = (Path = Normalize(Path ?? "")).IndexOf('/');
-            
-            var Name = Path.Substring(0, Index);
-            var Subpath = Path.Substring(Index + 1);
 
-            m_PathRouters.TryGetValue(Name, out var Builder);
-            if (Builder is null)
-                m_PathRouters[Name] = Builder = new RouterBuilder();
+            var Name = Index >= 0 ? Path.Substring(0, Index) : Path;
+            var Subpath = Index >= 0 ? Path.Substring(Index + 1) : string.Empty;
 
-            if (Subpath.Length > 0)
-                Builder.Path(Subpath, Configure);
+            if (Name.Length > 0)
+            {
+                m_PathRouters.TryGetValue(Name, out var Builder);
+                if (Builder is null)
+                    m_PathRouters[Name] = Builder = new RouterBuilder();
 
-            else
-                Configure?.Invoke(Builder);
+                if (Subpath.Length > 0)
+                    Builder.Path(Subpath, Configure);
 
+                else
+                    Configure?.Invoke(Builder);
+            }
+
+            else Configure?.Invoke(this);
             return this;
         }
 

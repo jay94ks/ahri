@@ -20,7 +20,7 @@ namespace Ahri.Http.Core.Routing
         /// <param name="Method"></param>
         /// <param name="Endpoint"></param>
         /// <returns></returns>
-        IRouterBuilder Map(string Method, Func<IHttpContext, Task> Endpoint);
+        IRouterBuilder Map(string Method, Func<IHttpContext, Task<IHttpAction>> Endpoint);
 
         /// <summary>
         /// Adds or append actions to the sub-router that has responsibility to handle the specific path.

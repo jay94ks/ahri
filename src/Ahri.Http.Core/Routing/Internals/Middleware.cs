@@ -4,14 +4,14 @@ using System.Threading.Tasks;
 
 namespace Ahri.Http.Core.Routing.Internals
 {
-    internal struct Middleware
+    internal class Middleware<TContext>
     {
-        private Func<IHttpContext, Func<Task>, Task> m_Prev;
-        private Func<IHttpContext, Func<Task>, Task> m_Next;
+        private Func<TContext, Func<Task>, Task> m_Prev;
+        private Func<TContext, Func<Task>, Task> m_Next;
 
         public Middleware(
-            Func<IHttpContext, Func<Task>, Task> Prev,
-            Func<IHttpContext, Func<Task>, Task> Next)
+            Func<TContext, Func<Task>, Task> Prev,
+            Func<TContext, Func<Task>, Task> Next)
         {
             m_Prev = Prev;
             m_Next = Next;
@@ -19,13 +19,13 @@ namespace Ahri.Http.Core.Routing.Internals
 
         struct MakeNext
         {
-            private Func<IHttpContext, Func<Task>, Task> m_Next;
+            private Func<TContext, Func<Task>, Task> m_Next;
             private Func<Task> m_FinalNext;
-            private IHttpContext m_Context;
+            private TContext m_Context;
 
             public MakeNext(
-                Func<IHttpContext, Func<Task>, Task> Next,
-                Func<Task> FinalNext, IHttpContext Context)
+                Func<TContext, Func<Task>, Task> Next,
+                Func<Task> FinalNext, TContext Context)
             {
                 m_Next = Next;
                 m_FinalNext = FinalNext;
@@ -38,7 +38,16 @@ namespace Ahri.Http.Core.Routing.Internals
         }
 
         [DebuggerHidden]
-        public Task InvokeAsync(IHttpContext Context, Func<Task> Next)
+        public Task InvokeAsync(TContext Context, Func<Task> Next)
             => m_Prev(Context, new MakeNext(m_Next, Next, Context).InvokeAsync);
+    }
+
+    internal class Middleware : Middleware<IHttpContext>
+    {
+        public Middleware(
+            Func<IHttpContext, Func<Task>, Task> Prev,
+            Func<IHttpContext, Func<Task>, Task> Next) : base(Prev, Next)
+        {
+        }
     }
 }

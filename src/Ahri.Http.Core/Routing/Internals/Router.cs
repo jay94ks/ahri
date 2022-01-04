@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 
 namespace Ahri.Http.Core.Routing.Internals
 {
-    internal struct Router : IRouter
+    internal class Router : IRouter
     {
         private Func<IHttpContext, Func<Task>, Task> m_Endpoint;
 

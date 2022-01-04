@@ -9,4 +9,8 @@
     <ProjectReference Include="..\Ahri\Ahri.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Cookies\" />
+  </ItemGroup>
+
 </Project>

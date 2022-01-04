@@ -1,0 +1,21 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net5.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\Ahri.Http.Core\Ahri.Http.Core.csproj" />
+    <ProjectReference Include="..\..\src\Ahri.Http\Ahri.Http.csproj" />
+    <ProjectReference Include="..\..\src\Ahri.Logging\Ahri.Logging.csproj" />
+    <ProjectReference Include="..\..\src\Ahri\Ahri.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="www\index.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+</Project>

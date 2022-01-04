@@ -37,7 +37,7 @@ namespace Ahri.Http.Core.Routing.Internals.Wrappers
                 var Executed = false;
                 if (m_Name.StartsWith(':'))
                 {
-                    State.PathParameters[m_Name.Substring(1)] = Name;
+                    State.PathParameters[m_Name] = Uri.UnescapeDataString(Name);
                     Executed = true;
                 }
 

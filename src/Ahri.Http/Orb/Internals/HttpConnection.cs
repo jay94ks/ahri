@@ -41,6 +41,7 @@ namespace Ahri.Http.Orb.Internals
         private Task m_Task;
         private Task m_TaskOutputs;
 
+        private HttpRequest m_Request;
         private HttpResponse m_Response;
 
         /// <summary>
@@ -178,15 +179,14 @@ namespace Ahri.Http.Orb.Internals
         /// <returns></returns>
         private async Task<bool> ExecuteAsync()
         {
-            HttpRequest Request;
-            try { Request = MakeRequest(out m_RequestAborts); }
+            try { m_Request = MakeRequest(out m_RequestAborts); }
             catch
             {
                 await CloseAsync();
-                Request = null;
+                m_Request = null;
             }
 
-            if (Request != null)
+            if (m_Request != null)
             {
                 var Response = new HttpResponse();
                 var Outputs = Channel.CreateBounded<byte[]>(16);
@@ -200,7 +200,7 @@ namespace Ahri.Http.Orb.Internals
                 m_Response = Response;
                 m_TaskOutputs = null;
 
-                m_Task = OnInternalReceiveAsync(Request, Response);
+                m_Task = OnInternalReceiveAsync(m_Request, Response);
                 m_State++;
                 return true;
             }
@@ -331,6 +331,12 @@ namespace Ahri.Http.Orb.Internals
             return Fragment;
         }
 
+        private bool TestContentRequest()
+        {
+            return !(string.Compare(m_Request.Method, "HEAD", true) == 0 ||
+                     string.Compare(m_Request.Method, "OPTIONS", true) == 0);
+        }
+
         /// <summary>
         /// Called when the response should be sent.
         /// </summary>
@@ -339,9 +345,39 @@ namespace Ahri.Http.Orb.Internals
         /// <returns></returns>
         private async Task OnResponseAsync(HttpResponse Response, bool Unhandled = false)
         {
-            Func<Task> Sender = () => SendChunkedAsync(
-                    () => m_Outputs.Completion.IsCompleted,
-                    () => m_Outputs.ReadAsync());
+            Func<Task> Sender;
+
+            if (TestContentRequest())
+                Sender = MakeSender(Response, Unhandled);
+
+            else
+            {
+                var Content = Response.Content;
+                if (Response.Content != m_OutputStream)
+                {
+                    try { Content.Close(); } catch { }
+                    try { Content.Dispose(); } catch { }
+                }
+
+                Sender = () => Task.CompletedTask;
+            }
+
+            await SendHeadersAsync(Response);
+            await Sender();
+        }
+
+        /// <summary>
+        /// Make the content sender delegate.
+        /// </summary>
+        /// <param name="Response"></param>
+        /// <param name="Unhandled"></param>
+        /// <returns></returns>
+        private Func<Task> MakeSender(HttpResponse Response, bool Unhandled)
+        {
+            Func<Task> Sender =
+                () => SendChunkedAsync(
+                () => m_Outputs.Completion.IsCompleted,
+                () => m_Outputs.ReadAsync());
 
             Response.Headers.RemoveAll(X =>
             {
@@ -349,21 +385,18 @@ namespace Ahri.Http.Orb.Internals
                     || X.Key.Equals("Content-Length", StringComparison.OrdinalIgnoreCase);
             });
 
-            if (Unhandled || Response.Content == m_OutputStream)
+            if (Unhandled && Response.Content == m_OutputStream)
             {
-                if (!Unhandled)
-                    SetChunkedEncoding(Response);
-
-                else
-                {
-                    Response.Headers.Add(new HttpHeader("Content-Length", "0"));
-                    Sender = () => Task.CompletedTask;
-                }
+                Response.Headers.Add(new HttpHeader("Content-Length", "0"));
+                Sender = () => Task.CompletedTask;
             }
-            else
+
+            else if (!Unhandled && Response.Content == m_OutputStream)
+                SetChunkedEncoding(Response);
+
+            else if (Response.Content != m_OutputStream)
             {
                 var Content = Response.Content;
-
                 var EndOfStream = false;
                 if (!Content.CanSeek)
                 {
@@ -419,8 +452,7 @@ namespace Ahri.Http.Orb.Internals
                 }
             }
 
-            await SendHeadersAsync(Response);
-            await Sender();
+            return Sender;
         }
 
         /// <summary>

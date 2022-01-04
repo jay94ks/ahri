@@ -22,17 +22,19 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "99. Examples", "99. Example
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ahri.Examples.Hosting.WinForm", "examples\Ahri.Examples.Hosting.WinForm\Ahri.Examples.Hosting.WinForm.csproj", "{6D2CC63E-FCA1-455F-8F8F-6BCB7FE34F2C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ahri.Hosting.Windows", "src\Ahri.Hosting.Windows\Ahri.Hosting.Windows.csproj", "{5F13EA4F-3ABA-42DF-B9F5-F891AF2B7DE6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ahri.Hosting.Windows", "src\Ahri.Hosting.Windows\Ahri.Hosting.Windows.csproj", "{5F13EA4F-3ABA-42DF-B9F5-F891AF2B7DE6}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ahri.Networks", "src\Ahri.Networks\Ahri.Networks.csproj", "{B44BDED1-E8A9-4DF1-B619-DD80E3AE8E97}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ahri.Examples.Networks.Http", "examples\Ahri.Examples.Networks.Http\Ahri.Examples.Networks.Http.csproj", "{0FB2185E-5A8E-49D5-95F1-B5D7D29022A8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ahri.Examples.Networks.Http", "examples\Ahri.Examples.Networks.Http\Ahri.Examples.Networks.Http.csproj", "{0FB2185E-5A8E-49D5-95F1-B5D7D29022A8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ahri.Logging", "src\Ahri.Logging\Ahri.Logging.csproj", "{6E20B7FF-098C-41FB-B344-38211C5D45F3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ahri.Logging", "src\Ahri.Logging\Ahri.Logging.csproj", "{6E20B7FF-098C-41FB-B344-38211C5D45F3}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ahri.Http", "src\Ahri.Http\Ahri.Http.csproj", "{A131DCB1-2BC8-4A73-B43E-FD152C6B3D7E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ahri.Http.Core", "src\Ahri.Http.Core\Ahri.Http.Core.csproj", "{010D2C18-A6AF-4419-9DF2-711F72D9101C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ahri.Http.Core", "src\Ahri.Http.Core\Ahri.Http.Core.csproj", "{010D2C18-A6AF-4419-9DF2-711F72D9101C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ahri.Examples.Http.Hosting", "examples\Ahri.Examples.Http.Hosting\Ahri.Examples.Http.Hosting.csproj", "{A8623E66-BFD3-4F8C-9AB3-B9B8473D5C82}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -80,6 +82,10 @@ Global
 		{010D2C18-A6AF-4419-9DF2-711F72D9101C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{010D2C18-A6AF-4419-9DF2-711F72D9101C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{010D2C18-A6AF-4419-9DF2-711F72D9101C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A8623E66-BFD3-4F8C-9AB3-B9B8473D5C82}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A8623E66-BFD3-4F8C-9AB3-B9B8473D5C82}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A8623E66-BFD3-4F8C-9AB3-B9B8473D5C82}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A8623E66-BFD3-4F8C-9AB3-B9B8473D5C82}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -95,6 +101,7 @@ Global
 		{6E20B7FF-098C-41FB-B344-38211C5D45F3} = {B906B971-D977-4702-AA58-9D7420EBB24D}
 		{A131DCB1-2BC8-4A73-B43E-FD152C6B3D7E} = {B906B971-D977-4702-AA58-9D7420EBB24D}
 		{010D2C18-A6AF-4419-9DF2-711F72D9101C} = {B906B971-D977-4702-AA58-9D7420EBB24D}
+		{A8623E66-BFD3-4F8C-9AB3-B9B8473D5C82} = {E1E01259-D0B8-4BAC-90F9-9FDAD4E845BC}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {3DA3874F-0347-4709-B1AB-29D6FD160DA6}
