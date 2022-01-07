@@ -2,6 +2,7 @@
 using Ahri.Hosting.Builders;
 using Ahri.Http.Core;
 using Ahri.Http.Core.Actions;
+using Ahri.Http.Core.Routing;
 using Ahri.Http.Hosting;
 using Ahri.Http.Orb;
 using Ahri.Logging;
@@ -17,6 +18,10 @@ namespace Ahri.Examples.Http.Hosting
         {
             await new HostBuilder()
                 .ConfigureLogging()
+                .ConfigureServices(Services =>
+                {
+                    Services.EnableHttpParameterInjection();
+                })
                 .ConfigureHttpHost(Host =>
                 {
                     Host.UseOrb() // --> Use `Orb` as Http Server.
@@ -45,22 +50,21 @@ namespace Ahri.Examples.Http.Hosting
                                 .Map("/", "./www");
 
                             Http.UseRouting()
-                                .Map("GET", async Context =>
+                                .OnAny("/", Context =>
                                 {
 
                                     return new StringContent("Hello World!");
                                 })
-                                .Path("/:name", Subroute =>
+                                .OnGet("/:name", Context =>
                                 {
-                                    Subroute.OnGet(async Context =>
-                                    {
-                                        var Route = Context.GetRouterState();
+                                    var Route = Context.GetRouterState();
 
-                                        Route.PathParameters.TryGetValue(":name", out var Name);
+                                    Route.PathParameters.TryGetValue(":name", out var Name);
 
-                                        return new StringContent($"Hello {Name}");
-                                    });
-                                });
+                                    return new StringContent($"Hello {Name}");
+                                })
+
+                                .Map(typeof(TestController));
 
                             Http.Configure(Services =>
                             {
@@ -71,6 +75,18 @@ namespace Ahri.Examples.Http.Hosting
                 })
                 .Build()
                 .RunAsync();
+        }
+
+        [Route("/test")]
+        private class TestController : Controller
+        {
+            [Route("/:name")]
+            public IHttpAction Test(
+                [FromPath(Name = ":name")] string Name)
+            {
+
+                return Text($"{Name}, hello!");
+            }
         }
     }
 }

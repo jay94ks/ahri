@@ -1,9 +1,12 @@
 ﻿using Ahri.Hosting;
 using Ahri.Http.Hosting.Internals;
 using Ahri.Http.Orb;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -29,7 +32,8 @@ namespace Ahri.Http.Hosting.Builders
                         .AddHostedService<HttpServerExecutor>()
                         .AddSingleton<HttpServerAccessor>()
                         .AddSingleton<HttpApplicationAccessor>()
-                        .AddScoped<HttpContextAccessor>();
+                        .AddScoped<IHttpContextAccessor, HttpContextAccessor>()
+                        .Resolvers.Add(OnResolveHttpFundamentals);
                 })
 
                 .Configure(Services =>
@@ -51,6 +55,27 @@ namespace Ahri.Http.Hosting.Builders
                 });
 
             this.UseOrb();
+        }
+
+        /// <summary>
+        /// Resolve Http Parameters.
+        /// </summary>
+        /// <param name="Param"></param>
+        /// <param name="Services"></param>
+        /// <returns></returns>
+        private static object OnResolveHttpFundamentals(ParameterInfo Param, IServiceProvider Services)
+        {
+            var ParamType = Param.ParameterType;
+            if (ParamType == typeof(IHttpContext))
+                return Services.GetRequiredService<HttpContextAccessor>().Instance;
+
+            if (ParamType == typeof(IHttpRequest))
+                return Services.GetRequiredService<HttpContextAccessor>().Instance.Request;
+
+            if (ParamType == typeof(IHttpResponse))
+                return Services.GetRequiredService<HttpContextAccessor>().Instance.Response;
+
+            return null;
         }
 
         /// <inheritdoc/>

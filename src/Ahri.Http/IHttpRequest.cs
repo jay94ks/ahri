@@ -54,6 +54,16 @@ namespace Ahri.Http
         string QueryString { get; set; }
 
         /// <summary>
+        /// Query Key Value Pairs.
+        /// </summary>
+        IDictionary<string, string> Queries { get; }
+
+        /// <summary>
+        /// Content instance.
+        /// </summary>
+        object Content { get; set; }
+
+        /// <summary>
         /// Request Headers.
         /// </summary>
         List<HttpHeader> Headers { get; }
@@ -61,6 +71,6 @@ namespace Ahri.Http
         /// <summary>
         /// Content Stream.
         /// </summary>
-        Stream Content { get; }
+        Stream ContentStream { get; }
     }
 }

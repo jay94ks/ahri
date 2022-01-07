@@ -36,6 +36,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ahri.Http.Core", "src\Ahri.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ahri.Examples.Http.Hosting", "examples\Ahri.Examples.Http.Hosting\Ahri.Examples.Http.Hosting.csproj", "{A8623E66-BFD3-4F8C-9AB3-B9B8473D5C82}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ahri.Values", "src\Ahri.Values\Ahri.Values.csproj", "{14785191-422A-4569-A7AD-EB47C4611399}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -86,6 +88,10 @@ Global
 		{A8623E66-BFD3-4F8C-9AB3-B9B8473D5C82}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A8623E66-BFD3-4F8C-9AB3-B9B8473D5C82}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A8623E66-BFD3-4F8C-9AB3-B9B8473D5C82}.Release|Any CPU.Build.0 = Release|Any CPU
+		{14785191-422A-4569-A7AD-EB47C4611399}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{14785191-422A-4569-A7AD-EB47C4611399}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{14785191-422A-4569-A7AD-EB47C4611399}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{14785191-422A-4569-A7AD-EB47C4611399}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -102,6 +108,7 @@ Global
 		{A131DCB1-2BC8-4A73-B43E-FD152C6B3D7E} = {B906B971-D977-4702-AA58-9D7420EBB24D}
 		{010D2C18-A6AF-4419-9DF2-711F72D9101C} = {B906B971-D977-4702-AA58-9D7420EBB24D}
 		{A8623E66-BFD3-4F8C-9AB3-B9B8473D5C82} = {E1E01259-D0B8-4BAC-90F9-9FDAD4E845BC}
+		{14785191-422A-4569-A7AD-EB47C4611399} = {B906B971-D977-4702-AA58-9D7420EBB24D}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {3DA3874F-0347-4709-B1AB-29D6FD160DA6}

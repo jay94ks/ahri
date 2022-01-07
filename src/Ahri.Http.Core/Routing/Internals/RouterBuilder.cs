@@ -138,7 +138,7 @@ namespace Ahri.Http.Core.Routing.Internals
 
         private Func<IHttpContext, Func<Task>, Task> ApplyPathRoutings(Func<IHttpContext, Func<Task>, Task> Built)
         {
-            foreach (var Subpath in m_PathRouters.Keys)
+            foreach (var Subpath in m_PathRouters.Keys.OrderByDescending(X => X.StartsWith(':') ? 0 : 1))
             {
                 var Builder = m_PathRouters[Subpath];
                 var Routing = new PathRouting(Builder.Build(), Subpath);

@@ -44,6 +44,11 @@ namespace Ahri.Http.Orb.Internals
         private HttpRequest m_Request;
         private HttpResponse m_Response;
 
+        private HttpOpaqueFeature m_Opaque;
+        private DuplexChannelStream m_OpaqueStream;
+
+        private TaskCompletionSource m_TaskOpaqueSwitch = new();
+
         /// <summary>
         /// Server Instance.
         /// </summary>
@@ -60,9 +65,21 @@ namespace Ahri.Http.Orb.Internals
             try { m_OutputStream?.Close(); }
             catch { }
 
+            m_OpaqueStream?.Close();
+            m_OpaqueStream = null;
+
             m_RequestAborts?.Cancel();
             m_RequestAborts?.Dispose();
             m_RequestAborts = null;
+
+            if (m_Task != null && m_TaskOutputs != null)
+                return Task.WhenAll(m_Task, m_TaskOutputs);
+
+            if (m_TaskOutputs != null) 
+                return m_TaskOutputs;
+
+            if (m_Task != null)
+                return m_Task;
 
             return Task.CompletedTask;
         }
@@ -82,7 +99,7 @@ namespace Ahri.Http.Orb.Internals
         /// <param name="Response"></param>
         /// <returns></returns>
         protected virtual Task OnReceiveAsync(IHttpRequest Request, IHttpResponse Response) 
-            => Server.InvokeOnRequestAsync(new HttpContext(Request, Response));
+            => Server.InvokeOnRequestAsync(new HttpContext(Request, Response, OnFeatureRequest));
 
         /// <inheritdoc/>
         protected override async Task OnReceiveAsync(PacketFragment Fragment)
@@ -145,7 +162,7 @@ namespace Ahri.Http.Orb.Internals
 
                     case 2: /* Waiting the request processing's completion. */
                         {
-                            await m_Task;
+                            await Task.WhenAny(m_TaskOpaqueSwitch.Task, m_Task);
 
                             try { m_OutputStream.Close(); }
                             catch { }
@@ -158,8 +175,32 @@ namespace Ahri.Http.Orb.Internals
                                 await OnResponseAsync(m_Response, true);
                             }
 
+                            if (m_OpaqueStream != null)
+                            {
+                                m_Task = m_Task.ContinueWith(X
+                                    => m_OpaqueStream.Close());
+
+                                m_State = 3;
+                                break;
+                            }
+
                             m_State = 0;
                         }
+                        break;
+
+                    case 3: /* Push bytes to opaque stream. */
+                        try { await m_OpaqueStream.ChannelRead.Writer.WriteAsync(Fragment.ToArray()); }
+                        catch
+                        {
+                            m_State++;
+                        }
+
+                        Fragment = PacketFragment.Empty;
+                        break;
+
+                    case 4: /* Escape from opaque stream*/
+                        await CloseAsync();
+                        Fragment = PacketFragment.Empty;
                         break;
                 }
 
@@ -262,7 +303,7 @@ namespace Ahri.Http.Orb.Internals
             m_InputDiscards = false;
 
             Request.Aborted = (Cts = new()).Token;
-            Request.Content = new ChannelStream(Inputs.Reader, () =>
+            Request.ContentStream = new ChannelStream(Inputs.Reader, () =>
             {
                 m_InputDiscards = true;
                 m_Inputs.TryComplete();
@@ -338,6 +379,66 @@ namespace Ahri.Http.Orb.Internals
         }
 
         /// <summary>
+        /// Called when feature requested.
+        /// </summary>
+        /// <param name="Type"></param>
+        /// <returns></returns>
+        private object OnFeatureRequest(Type Type)
+        {
+            if (Type.IsAssignableFrom(typeof(IHttpOpaqueFeature)))
+            {
+                if (m_Opaque is null)
+                    m_Opaque = new HttpOpaqueFeature(this);
+
+                return m_Opaque;
+            }
+
+            return null;
+        }
+
+        /// <summary>
+        /// Get Opaque Stream.
+        /// </summary>
+        /// <returns></returns>
+        internal Stream GetOpaqueStream()
+        {
+            if (m_OpaqueStream is null)
+            {
+                m_OpaqueStream = new DuplexChannelStream();
+
+                try
+                {
+                    /* Discard input stream. */
+                    if (m_Request.ContentStream != null)
+                        m_Request.ContentStream.Close();
+                }
+                catch { }
+
+                m_TaskOutputs = SendOpaqueOutputs();
+                m_TaskOpaqueSwitch.TrySetResult();
+            }
+
+            return m_OpaqueStream;
+        }
+
+        /// <summary>
+        /// Send Opaque Outputs to remote hosts.
+        /// </summary>
+        /// <returns></returns>
+        private async Task SendOpaqueOutputs()
+        {
+            while (true)
+            {
+                byte[] Data;
+
+                try { Data = await m_OpaqueStream.ChannelWrite.Reader.ReadAsync(); }
+                catch { break; }
+
+                await SendAsync(Data);
+            }
+        }
+
+        /// <summary>
         /// Called when the response should be sent.
         /// </summary>
         /// <param name="Response"></param>
@@ -401,8 +502,7 @@ namespace Ahri.Http.Orb.Internals
                 if (!Content.CanSeek)
                 {
                     Response.Headers.Add(new HttpHeader("Transfer-Encoding", "chunked"));
-                    Sender = () => SendChunkedAsync(
-                        () => EndOfStream,
+                    Sender = () => SendChunkedAsync(() => EndOfStream,
                         async () =>
                         {
                             var Buffer = new byte[4096];

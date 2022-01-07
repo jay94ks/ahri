@@ -1,4 +1,5 @@
-﻿using Ahri.Http.Hosting.Internals;
+﻿using Ahri.Core;
+using Ahri.Http.Hosting.Internals;
 using Ahri.Http.Orb.Internals.Models;
 using System;
 using System.Collections.Generic;
@@ -12,6 +13,7 @@ namespace Ahri.Http.Hosting.Builders
     {
         private List<Action<IServiceProvider>> m_Configures = new();
         private List<Func<Func<IHttpContext, Func<Task>, Task>>> m_Middlewares = new();
+        private List<Action<IHttpContentDeserializerBuilder>> m_Deserializers = new();
 
         /// <summary>
         /// Initialize a new <see cref="HttpApplicationBuilder"/> instances.
@@ -25,6 +27,13 @@ namespace Ahri.Http.Hosting.Builders
 
         /// <inheritdoc/>
         public IServiceProvider ApplicationServices { get; }
+
+        /// <inheritdoc/>
+        public IHttpApplicationBuilder UseContent(Action<IHttpContentDeserializerBuilder> Configure)
+        {
+            m_Deserializers.Add(Configure);
+            return this;
+        }
 
         /// <inheritdoc/>
         public IHttpApplicationBuilder Use(Func<IHttpContext, Func<Task>, Task> Middleware)
@@ -54,19 +63,35 @@ namespace Ahri.Http.Hosting.Builders
             var App = Factory != null ? Factory() : null;
             if (App != null)
             {
-                foreach(var Each in m_Middlewares.Skip(1))
+                foreach (var Each in m_Middlewares.Skip(1))
                     App = new HttpMiddleware(App, Each()).InvokeAsync;
             }
 
-            using(var Scope = ApplicationServices
+            using (var Scope = ApplicationServices
                 .GetRequiredService<IServiceScopeFactory>()
-                .CreateScope())
+                .CreateScope(ConfigureOverrides()))
             {
                 foreach (var Each in m_Configures)
                     Each?.Invoke(Scope.ServiceProvider);
             }
 
             return new HttpApplication(ApplicationServices, App);
+        }
+
+        /// <summary>
+        /// Configure overriden services for the Http Application.
+        /// </summary>
+        /// <returns></returns>
+        private ServiceCollection ConfigureOverrides()
+        {
+            var Overrides = new ServiceCollection();
+            var Deserializers = new HttpContentDeserializerBuilder();
+
+            foreach (var Each in m_Deserializers)
+                Each?.Invoke(Deserializers);
+
+            Overrides.AddSingleton(Deserializers.Build());
+            return Overrides;
         }
     }
 }

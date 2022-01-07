@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Ahri.Http.Internals;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Net;
@@ -8,64 +9,83 @@ namespace Ahri.Http.Orb.Internals.Models
 {
     public class HttpRequest : IHttpRequest
     {
+        private object m_Content;
+        private bool m_ContentInterpreted;
+
         /// <summary>
         /// Hides the constructor of the <see cref="HttpRequest"/> instance.
         /// </summary>
-        internal HttpRequest() { }
+        internal HttpRequest()
+        {
+            Queries = new HttpRequestQueryString(this);
+        }
 
-        /// <summary>
-        /// A location where stores temporary datas that is used to handle the request.
-        /// </summary>
+        /// <inheritdoc/>
         public IDictionary<object, object> Properties { get; } = new Dictionary<object, object>();
 
-        /// <summary>
-        /// Service Provider that is created for the current request.
-        /// </summary>
+        /// <inheritdoc/>
         public IServiceProvider Services { get; internal set; }
 
-        /// <summary>
-        /// The local endpoint that accepted this request.
-        /// </summary>
+        /// <inheritdoc/>
         public EndPoint LocalEndpoint { get; internal set; }
 
-        /// <summary>
-        /// The remote endpoint that sent this request.
-        /// </summary>
+        /// <inheritdoc/>
         public EndPoint RemoteEndpoint { get; internal set; }
 
-        /// <summary>
-        /// Triggered when the request is aborted because the connection lost before completed.
-        /// </summary>
+        /// <inheritdoc/>
         public CancellationToken Aborted { get; internal set; }
 
-        /// <summary>
-        /// Request Method.
-        /// </summary>
+        /// <inheritdoc/>
         public string Method { get; internal set; }
 
-        /// <summary>
-        /// Request Protocol.
-        /// </summary>
+        /// <inheritdoc/>
         public string Protocol { get; internal set; }
 
-        /// <summary>
-        /// Path String.
-        /// </summary>
+        /// <inheritdoc/>
         public string PathString { get; set; }
 
-        /// <summary>
-        /// Query String
-        /// </summary>
+        /// <inheritdoc/>
         public string QueryString { get; set; }
 
-        /// <summary>
-        /// Request Headers.
-        /// </summary>
+        /// <inheritdoc/>
+        public IDictionary<string, string> Queries { get; }
+
+        /// <inheritdoc/>
         public List<HttpHeader> Headers { get; } = new List<HttpHeader>();
 
-        /// <summary>
-        /// Content Stream.
-        /// </summary>
-        public Stream Content { get; internal set; }
+        /// <inheritdoc/>
+        public object Content
+        {
+            get
+            {
+                if (m_ContentInterpreted)
+                    return m_Content;
+
+                if (ContentStream != null)
+                {
+                    var Deserializer = Services.GetService<IHttpContentDeserializer>();
+                    try
+                    {
+                        if (Deserializer != null && Deserializer.CanHandle(this))
+                            m_Content = Deserializer.Handle(this);
+                    }
+
+                    catch { m_Content = null; }
+                }
+
+                m_ContentInterpreted = true;
+                return m_Content;
+            }
+
+            set
+            {
+                m_Content = value;
+                m_ContentInterpreted = true;
+            }
+        }
+
+        /// <inheritdoc/>
+        public Stream ContentStream { get; internal set; }
+
     }
 }

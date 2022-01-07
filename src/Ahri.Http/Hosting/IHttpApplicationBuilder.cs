@@ -17,6 +17,13 @@ namespace Ahri.Http.Hosting
         IServiceProvider ApplicationServices { get; }
 
         /// <summary>
+        /// Use the content deserializer to interpret request content.
+        /// </summary>
+        /// <param name="Configure"></param>
+        /// <returns></returns>
+        IHttpApplicationBuilder UseContent(Action<IHttpContentDeserializerBuilder> Configure);
+
+        /// <summary>
         /// Adds a delegate that handles the <see cref="IHttpContext"/> instance.
         /// </summary>
         /// <param name="Middleware"></param>
