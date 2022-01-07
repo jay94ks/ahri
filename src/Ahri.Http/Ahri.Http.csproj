@@ -11,7 +11,7 @@
     <Company>Jaehoon Joe</Company>
     <Authors>Jaehoon Joe</Authors>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Version>1.0.1.4</Version>
+    <Version>1.0.1.5</Version>
   </PropertyGroup>
 
   <ItemGroup>
