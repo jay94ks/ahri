@@ -1,0 +1,10 @@
+version: '3.4'
+
+services:
+  ahri.examples.dockerization:
+    image: ${DOCKER_REGISTRY-}ahriexamplesdockerization
+    build:
+      context: .
+      dockerfile: examples/Ahri.Examples.Dockerization/Dockerfile
+    ports:
+      - "5000:5000"

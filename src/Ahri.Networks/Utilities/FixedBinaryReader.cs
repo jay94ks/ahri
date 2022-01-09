@@ -3,7 +3,7 @@ using System.IO;
 
 namespace Ahri.Networks.Utilities
 {
-    internal class FixedBinaryReader
+    public class FixedBinaryReader
     {
         private Action<byte[]> m_Endian;
         private byte[] m_Buf64, m_Buf32, m_Buf16;

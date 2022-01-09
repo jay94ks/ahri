@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "Ahri.Examples.Dockerization": {
+      "commandName": "Project"
+    },
+    "Docker": {
+      "commandName": "Docker"
+    }
+  }
+}

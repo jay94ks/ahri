@@ -3,7 +3,7 @@ using System.IO;
 
 namespace Ahri.Networks.Utilities
 {
-    internal class FixedBinaryWriter
+    public class FixedBinaryWriter
     {
         private Action<byte[]> m_Endian;
 

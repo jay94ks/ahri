@@ -1,0 +1,25 @@
+services:
+  ahri.examples.dockerization:
+    build:
+      context: C:\GitHub\ahri
+      dockerfile: examples/Ahri.Examples.Dockerization/Dockerfile
+      labels:
+        com.microsoft.created-by: visual-studio
+        com.microsoft.visual-studio.project-name: Ahri.Examples.Dockerization
+    container_name: Ahri.Examples.Dockerization_1
+    entrypoint: tail -f /dev/null
+    image: ahriexamplesdockerization
+    labels:
+      com.microsoft.visual-studio.project-name: Ahri.Examples.Dockerization
+      com.microsoft.visualstudio.debuggee.arguments: ' --additionalProbingPath /root/.nuget/packages  "/app/Ahri.Examples.Dockerization.dll"'
+      com.microsoft.visualstudio.debuggee.killprogram: /bin/sh -c "if PID=$$(pidof
+        dotnet); then kill $$PID; fi"
+      com.microsoft.visualstudio.debuggee.program: dotnet
+      com.microsoft.visualstudio.debuggee.workingdirectory: /app
+    ports:
+    - published: 5000
+      target: 5000
+    tty: true
+    volumes:
+    - C:\Users\neurnn\vsdbg\vs2017u5:/remote_debugger:rw
+version: '3.4'

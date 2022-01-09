@@ -228,6 +228,40 @@ namespace Ahri.Examples.Networks.Http
 }
 ```
 
-### Developing features:
-1. Dockerization.
-2. Etc...........
+### Dockerization
+Example Dockerfile:
+```
+FROM mcr.microsoft.com/dotnet/runtime:5.0 AS base
+WORKDIR /app
+
+FROM mcr.microsoft.com/dotnet/sdk:5.0 AS build
+WORKDIR /src
+COPY . /src
+RUN ls -al /src
+RUN dotnet restore "examples/Ahri.Examples.Dockerization/Ahri.Examples.Dockerization.csproj"
+WORKDIR "/src/examples/Ahri.Examples.Dockerization"
+RUN dotnet build "Ahri.Examples.Dockerization.csproj" -c Release -o /app/build
+
+FROM build AS publish
+RUN dotnet publish "Ahri.Examples.Dockerization.csproj" -c Release -o /app/publish
+
+FROM base AS final
+WORKDIR /app
+COPY --from=publish /app/publish .
+
+EXPOSE 5000
+ENTRYPOINT ["dotnet", "Ahri.Examples.Dockerization.dll"]
+```
+
+Example docker-compose.yml:
+```
+version: '3.4'
+services:
+  ahri.examples.dockerization:
+    image: ${DOCKER_REGISTRY-}ahriexamplesdockerization
+    build:
+      context: .
+      dockerfile: examples/Ahri.Examples.Dockerization/Dockerfile
+    ports:
+      - "5000:5000"
+```

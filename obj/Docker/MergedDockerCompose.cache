@@ -1,0 +1,7 @@
+services:
+  ahri.examples.dockerization:
+    build:
+      context: C:\GitHub\ahri
+      dockerfile: examples/Ahri.Examples.Dockerization/Dockerfile
+    image: ahriexamplesdockerization
+version: '3.4'

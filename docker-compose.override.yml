@@ -1,0 +1,3 @@
+version: '3.4'
+services:
+  ahri.examples.dockerization:
